@@ -37,7 +37,6 @@ void SortByarrivalTime(int n, int ar[], int bt[], int pid[], int Comp[])
                 swap(bt[i], bt[j]);
                 swap(pid[i], pid[j]);
                 swap(Comp[i], Comp[j]);
-
             }
         }
     }
@@ -87,7 +86,7 @@ void Calculate(int n, int ar[], int bt[], int  Comp[], int ta[], int wt[], float
     avgta = (avgta / n); // tính trung bình  tổng tgian hoàn tất
 }
 
-int Check2(int& n, int ar[], int Comp[], int bt[], int pid[], int del[], int& j)
+int Check2(int& n, int ar[], int Comp[], int bt[], int pid[], int del[], int& j) // kiểm tra xem có rơi vào trường hợp đặt biệt không
 {
     for (int i = 0; i < n - 1; i++)
     {
@@ -101,7 +100,7 @@ int Check2(int& n, int ar[], int Comp[], int bt[], int pid[], int del[], int& j)
 
 
 void Check1(int& n, int ar[], int Comp[], int bt[], int pid[], int del[], int& j)
-{
+{// nếu rơi vào trường hợp đặt biệt thì đưa phần không thực hiện về cuối mảng
     for (int i = 0; i < n - 1; i++)
     {
         if (Comp[i] < ar[i + 1])
@@ -278,22 +277,32 @@ int main() {
     float avgwt = 0, avgta = 0;
     int pid[100], ar[100], bt[100], Comp[100], ta[100], wt[100], del[100];
 
+
+    // nhập vào và  thực hiện 
     Input(n, ar, bt, pid, m);
     SortByarrivalTime(n, ar, bt, pid, Comp);
     Calculate(n, ar, bt, Comp, ta, wt, avgwt, avgta);
 
+    // kiểm tra xem có vào trường hợp đặt biệt không sau đó xử lí
     while (Check2(n, ar, Comp, bt, pid, del, temp))
     {
         Check1(n, ar, Comp, bt, pid, del, temp);
         SortByarrivalTime(n, ar, bt, pid, Comp);
     }
 
+    // sắp xếp các mảng theo thời gian đến để vẽ sơ đồ
     SortByarrivalTime(n, ar, bt, pid, Comp);
 
+
+    // thực hiện vẽ sơ đồ
     DrawChart(n, ar, bt, pid, Comp, ta, wt, m);
 
+
+    // xóa những khoảng chờ không cần thiết
     Clean(n, ar, bt, Comp, del, pid, temp);
 
+
+    // in ra kết quả
     printf("\nPID\tArrival\tBurst\tComplete\tTurnaround\tWaiting\n");
     for (int i = 0; i < n; i++) {
         printf("%d\t%d\t%d\t%d\t\t%d\t\t%d\n", pid[i], ar[i], bt[i], Comp[i], ta[i], wt[i]);
